@@ -1,11 +1,22 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Navbar } from "../components/Navbar.jsx";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Badge } from "../components/ui/badge";
 import {
   Dialog,
@@ -30,8 +41,15 @@ import {
   TableHeader,
   TableRow,
 } from "../components/ui/table";
-import { UserPlus, Calendar, Trash2, Filter, Plus, Stethoscope } from "lucide-react";
-import { adminAPI, doctorsAPI, appointmentsAPI } from '../services/api.js'
+import {
+  UserPlus,
+  Calendar,
+  Trash2,
+  Filter,
+  Plus,
+  Stethoscope,
+} from "lucide-react";
+import { adminAPI, doctorsAPI, appointmentsAPI } from "../services/api.js";
 import { toast } from "sonner";
 
 export function AdminDashboard() {
@@ -43,11 +61,12 @@ export function AdminDashboard() {
   // ventanas modales
   const [dialogOpen, setDialogOpen] = useState(false);
   const [specialtyDialogOpen, setSpecialtyDialogOpen] = useState(false);
-  const [assignSpecialtyDialogOpen, setAssignSpecialtyDialogOpen] = useState(false);
+  const [assignSpecialtyDialogOpen, setAssignSpecialtyDialogOpen] =
+    useState(false);
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   const [selectedDoctorFilter, setSelectedDoctorFilter] = useState("all");
-  
+
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -76,7 +95,7 @@ export function AdminDashboard() {
     totalAdmins: 0,
     totalDoctors: 0,
     totalPatients: 0,
-    totalAppointments: 0
+    totalAppointments: 0,
   });
 
   // Cargar doctores, especialidades y usuarios del backend en paralelo
@@ -94,30 +113,34 @@ export function AdminDashboard() {
         setSpecialties(s || []);
         setAllUsers(users || []);
         setAppointments(appts || []);
-        setDashboardData(dashboard || {
-          totalUsers: 0,
-          totalAdmins: 0,
-          totalDoctors: 0,
-          totalPatients: 0,
-          totalAppointments: 0
-        });
+        setDashboardData(
+          dashboard || {
+            totalUsers: 0,
+            totalAdmins: 0,
+            totalDoctors: 0,
+            totalPatients: 0,
+            totalAppointments: 0,
+          },
+        );
       } catch (error) {
         toast.error("Error al cargar datos");
         console.error(error);
       }
     };
     load();
-  }, []); 
+  }, []);
 
   const patients = allUsers.filter((u) => u.role === "PATIENT");
   const admins = allUsers.filter((u) => u.role === "ADMIN");
 
   // Filtrar citas por doctor
-  const filteredAppointments = selectedDoctorFilter === "all"
-    ? appointments
-    : appointments.filter((apt) => String(apt.doctor_id) === selectedDoctorFilter);
+  const filteredAppointments =
+    selectedDoctorFilter === "all"
+      ? appointments
+      : appointments.filter(
+          (apt) => String(apt.doctor_id) === selectedDoctorFilter,
+        );
 
-        
   const handleCreateUser = async (e) => {
     e.preventDefault();
 
@@ -134,15 +157,17 @@ export function AdminDashboard() {
         ]);
         setDoctors(d || []);
         setAllUsers(users || []);
-        setDashboardData(dashboard || {
-          totalUsers: 0,
-          totalAdmins: 0,
-          totalDoctors: 0,
-          totalPatients: 0,
-          totalAppointments: 0
-        });
+        setDashboardData(
+          dashboard || {
+            totalUsers: 0,
+            totalAdmins: 0,
+            totalDoctors: 0,
+            totalPatients: 0,
+            totalAppointments: 0,
+          },
+        );
       } catch (err) {
-        console.error('Error refreshing data after user creation', err);
+        console.error("Error refreshing data after user creation", err);
       }
 
       setNewUser({
@@ -198,7 +223,7 @@ export function AdminDashboard() {
     try {
       await adminAPI.assignSpecialtyToDoctor(
         assignSpecialtyData.doctorId,
-        assignSpecialtyData.specialtyId
+        assignSpecialtyData.specialtyId,
       );
 
       toast.success("Especialidad asignada exitosamente");
@@ -216,7 +241,12 @@ export function AdminDashboard() {
   const handleAssignSchedule = async (e) => {
     e.preventDefault();
 
-    if (!newSchedule.doctorId || !newSchedule.dayOfWeek || !newSchedule.startTime || !newSchedule.endTime) {
+    if (
+      !newSchedule.doctorId ||
+      !newSchedule.dayOfWeek ||
+      !newSchedule.startTime ||
+      !newSchedule.endTime
+    ) {
       toast.error("Por favor completa todos los campos del horario");
       return;
     }
@@ -233,7 +263,12 @@ export function AdminDashboard() {
 
       toast.success("Horario asignado exitosamente");
       setScheduleDialogOpen(false);
-      setNewSchedule({ doctorId: "", dayOfWeek: "MON", startTime: "09:00", endTime: "17:00" });
+      setNewSchedule({
+        doctorId: "",
+        dayOfWeek: "MON",
+        startTime: "09:00",
+        endTime: "17:00",
+      });
     } catch (error) {
       toast.error(error.message || "Error al asignar el horario");
       console.error(error);
@@ -247,12 +282,17 @@ export function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Panel de Administración
+            </h1>
             <p className="text-gray-600 mt-2">Bienvenido, {user?.name}</p>
           </div>
 
           <div className="flex gap-2">
-            <Dialog open={specialtyDialogOpen} onOpenChange={setSpecialtyDialogOpen}>
+            <Dialog
+              open={specialtyDialogOpen}
+              onOpenChange={setSpecialtyDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="h-4 w-4 mr-2" />
@@ -267,20 +307,35 @@ export function AdminDashboard() {
                   </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleCreateSpecialty} className="space-y-4 mt-4">
+                <form
+                  onSubmit={handleCreateSpecialty}
+                  className="space-y-4 mt-4"
+                >
                   <div className="space-y-2">
-                    <Label htmlFor="specialtyName">Nombre de la Especialidad</Label>
+                    <Label htmlFor="specialtyName">
+                      Nombre de la Especialidad
+                    </Label>
                     <Input
                       id="specialtyName"
                       value={newSpecialty.name}
-                      onChange={(e) => setNewSpecialty({ ...newSpecialty, name: e.target.value })}
+                      onChange={(e) =>
+                        setNewSpecialty({
+                          ...newSpecialty,
+                          name: e.target.value,
+                        })
+                      }
                       placeholder="Ej: Oncología"
                       required
                     />
                   </div>
 
                   <div className="flex gap-3 pt-4">
-                    <Button type="button" variant="outline" onClick={() => setSpecialtyDialogOpen(false)} className="flex-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setSpecialtyDialogOpen(false)}
+                      className="flex-1"
+                    >
                       Cancelar
                     </Button>
                     <Button type="submit" className="flex-1">
@@ -291,97 +346,125 @@ export function AdminDashboard() {
               </DialogContent>
             </Dialog>
 
-              <Dialog open={scheduleDialogOpen} onOpenChange={setScheduleDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Asignar Horario
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Asignar Horario a Doctor</DialogTitle>
-                    <DialogDescription>
-                      Define un día y rango horario para el doctor seleccionado
-                    </DialogDescription>
-                  </DialogHeader>
+            <Dialog
+              open={scheduleDialogOpen}
+              onOpenChange={setScheduleDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Asignar Horario
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Asignar Horario a Doctor</DialogTitle>
+                  <DialogDescription>
+                    Define un día y rango horario para el doctor seleccionado
+                  </DialogDescription>
+                </DialogHeader>
 
-                  <form onSubmit={handleAssignSchedule} className="space-y-4 mt-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="scheduleDoctor">Doctor</Label>
-                      <Select
-                        value={newSchedule.doctorId}
-                        onValueChange={(value) => setNewSchedule({ ...newSchedule, doctorId: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecciona un doctor" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {doctors.map((doctor) => (
-                            <SelectItem key={doctor.id} value={String(doctor.id)}>
-                              {doctor.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                <form
+                  onSubmit={handleAssignSchedule}
+                  className="space-y-4 mt-4"
+                >
+                  <div className="space-y-2">
+                    <Label htmlFor="scheduleDoctor">Doctor</Label>
+                    <Select
+                      value={newSchedule.doctorId}
+                      onValueChange={(value) =>
+                        setNewSchedule({ ...newSchedule, doctorId: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un doctor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {doctors.map((doctor) => (
+                          <SelectItem key={doctor.id} value={String(doctor.id)}>
+                            {doctor.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="dayOfWeek">Día</Label>
-                      <Select
-                        value={newSchedule.dayOfWeek}
-                        onValueChange={(value) => setNewSchedule({ ...newSchedule, dayOfWeek: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="MON">Lunes</SelectItem>
-                          <SelectItem value="TUE">Martes</SelectItem>
-                          <SelectItem value="WED">Miércoles</SelectItem>
-                          <SelectItem value="THU">Jueves</SelectItem>
-                          <SelectItem value="FRI">Viernes</SelectItem>
-                          <SelectItem value="SAT">Sábado</SelectItem>
-                          <SelectItem value="SUN">Domingo</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dayOfWeek">Día</Label>
+                    <Select
+                      value={newSchedule.dayOfWeek}
+                      onValueChange={(value) =>
+                        setNewSchedule({ ...newSchedule, dayOfWeek: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="MON">Lunes</SelectItem>
+                        <SelectItem value="TUE">Martes</SelectItem>
+                        <SelectItem value="WED">Miércoles</SelectItem>
+                        <SelectItem value="THU">Jueves</SelectItem>
+                        <SelectItem value="FRI">Viernes</SelectItem>
+                        <SelectItem value="SAT">Sábado</SelectItem>
+                        <SelectItem value="SUN">Domingo</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="startTime">Hora inicio</Label>
-                      <Input
-                        id="startTime"
-                        type="time"
-                        value={newSchedule.startTime}
-                        onChange={(e) => setNewSchedule({ ...newSchedule, startTime: e.target.value })}
-                        required
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="startTime">Hora inicio</Label>
+                    <Input
+                      id="startTime"
+                      type="time"
+                      value={newSchedule.startTime}
+                      onChange={(e) =>
+                        setNewSchedule({
+                          ...newSchedule,
+                          startTime: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="endTime">Hora fin</Label>
-                      <Input
-                        id="endTime"
-                        type="time"
-                        value={newSchedule.endTime}
-                        onChange={(e) => setNewSchedule({ ...newSchedule, endTime: e.target.value })}
-                        required
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="endTime">Hora fin</Label>
+                    <Input
+                      id="endTime"
+                      type="time"
+                      value={newSchedule.endTime}
+                      onChange={(e) =>
+                        setNewSchedule({
+                          ...newSchedule,
+                          endTime: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
 
-                    <div className="flex gap-3 pt-4">
-                      <Button type="button" variant="outline" onClick={() => setScheduleDialogOpen(false)} className="flex-1">
-                        Cancelar
-                      </Button>
-                      <Button type="submit" className="flex-1">
-                        Asignar Horario
-                      </Button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
+                  <div className="flex gap-3 pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setScheduleDialogOpen(false)}
+                      className="flex-1"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit" className="flex-1">
+                      Asignar Horario
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
 
-            <Dialog open={assignSpecialtyDialogOpen} onOpenChange={setAssignSpecialtyDialogOpen}>
+            <Dialog
+              open={assignSpecialtyDialogOpen}
+              onOpenChange={setAssignSpecialtyDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Stethoscope className="h-4 w-4 mr-2" />
@@ -396,12 +479,20 @@ export function AdminDashboard() {
                   </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleAssignSpecialty} className="space-y-4 mt-4">
+                <form
+                  onSubmit={handleAssignSpecialty}
+                  className="space-y-4 mt-4"
+                >
                   <div className="space-y-2">
                     <Label htmlFor="doctorSelect">Doctor</Label>
                     <Select
                       value={assignSpecialtyData.doctorId}
-                      onValueChange={(value) => setAssignSpecialtyData({ ...assignSpecialtyData, doctorId: value })}
+                      onValueChange={(value) =>
+                        setAssignSpecialtyData({
+                          ...assignSpecialtyData,
+                          doctorId: value,
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona un doctor" />
@@ -420,14 +511,22 @@ export function AdminDashboard() {
                     <Label htmlFor="specialtySelect">Especialidad</Label>
                     <Select
                       value={assignSpecialtyData.specialtyId}
-                      onValueChange={(value) => setAssignSpecialtyData({ ...assignSpecialtyData, specialtyId: value })}
+                      onValueChange={(value) =>
+                        setAssignSpecialtyData({
+                          ...assignSpecialtyData,
+                          specialtyId: value,
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona una especialidad" />
                       </SelectTrigger>
                       <SelectContent>
                         {specialties.map((specialty) => (
-                          <SelectItem key={specialty.id} value={String(specialty.id)}>
+                          <SelectItem
+                            key={specialty.id}
+                            value={String(specialty.id)}
+                          >
                             {specialty.name}
                           </SelectItem>
                         ))}
@@ -436,7 +535,12 @@ export function AdminDashboard() {
                   </div>
 
                   <div className="flex gap-3 pt-4">
-                    <Button type="button" variant="outline" onClick={() => setAssignSpecialtyDialogOpen(false)} className="flex-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setAssignSpecialtyDialogOpen(false)}
+                      className="flex-1"
+                    >
                       Cancelar
                     </Button>
                     <Button type="submit" className="flex-1">
@@ -458,7 +562,8 @@ export function AdminDashboard() {
                 <DialogHeader>
                   <DialogTitle>Crear Nuevo Usuario</DialogTitle>
                   <DialogDescription>
-                    Completa el formulario para crear un nuevo usuario en el sistema
+                    Completa el formulario para crear un nuevo usuario en el
+                    sistema
                   </DialogDescription>
                 </DialogHeader>
 
@@ -468,7 +573,9 @@ export function AdminDashboard() {
                     <Input
                       id="name"
                       value={newUser.name}
-                      onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, name: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -479,7 +586,9 @@ export function AdminDashboard() {
                       id="email"
                       type="email"
                       value={newUser.email}
-                      onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, email: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -490,7 +599,9 @@ export function AdminDashboard() {
                       id="phone"
                       type="tel"
                       value={newUser.telefono}
-                      onChange={(e) => setNewUser({ ...newUser, telefono: e.target.value })}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, telefono: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -501,7 +612,9 @@ export function AdminDashboard() {
                       id="password"
                       type="password"
                       value={newUser.password}
-                      onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, password: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -510,7 +623,9 @@ export function AdminDashboard() {
                     <Label htmlFor="role">Rol</Label>
                     <Select
                       value={newUser.role}
-                      onValueChange={(value) => setNewUser({ ...newUser, role: value })}
+                      onValueChange={(value) =>
+                        setNewUser({ ...newUser, role: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -524,7 +639,12 @@ export function AdminDashboard() {
                   </div>
 
                   <div className="flex gap-3 pt-4">
-                    <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="flex-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                      className="flex-1"
+                    >
                       Cancelar
                     </Button>
                     <Button type="submit" className="flex-1">
@@ -541,28 +661,36 @@ export function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">{dashboardData.totalUsers}</CardTitle>
+              <CardTitle className="text-2xl">
+                {dashboardData.totalUsers}
+              </CardTitle>
               <CardDescription>Total Usuarios</CardDescription>
             </CardHeader>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">{dashboardData.totalPatients}</CardTitle>
+              <CardTitle className="text-2xl">
+                {dashboardData.totalPatients}
+              </CardTitle>
               <CardDescription>Pacientes</CardDescription>
             </CardHeader>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">{dashboardData.totalDoctors}</CardTitle>
+              <CardTitle className="text-2xl">
+                {dashboardData.totalDoctors}
+              </CardTitle>
               <CardDescription>Doctores</CardDescription>
             </CardHeader>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">{dashboardData.totalAppointments}</CardTitle>
+              <CardTitle className="text-2xl">
+                {dashboardData.totalAppointments}
+              </CardTitle>
               <CardDescription>Total Citas</CardDescription>
             </CardHeader>
           </Card>
@@ -572,15 +700,21 @@ export function AdminDashboard() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Especialidades Médicas</CardTitle>
-            <CardDescription>Listado de especialidades disponibles en el sistema</CardDescription>
+            <CardDescription>
+              Listado de especialidades disponibles en el sistema
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {specialties.map((specialty) => (
                 <Card key={specialty.id}>
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base">{specialty.name}</CardTitle>
-                    <CardDescription className="text-sm">{specialty.description}</CardDescription>
+                    <CardTitle className="text-base">
+                      {specialty.name}
+                    </CardTitle>
+                    <CardDescription className="text-sm">
+                      {specialty.description}
+                    </CardDescription>
                   </CardHeader>
                 </Card>
               ))}
@@ -592,15 +726,25 @@ export function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Gestión de Usuarios</CardTitle>
-            <CardDescription>Administra los usuarios del sistema</CardDescription>
+            <CardDescription>
+              Administra los usuarios del sistema
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="grid w-full grid-cols-4 mb-6">
-                <TabsTrigger value="all">Todos ({dashboardData.totalUsers})</TabsTrigger>
-                <TabsTrigger value="PATIENT">Pacientes ({dashboardData.totalPatients})</TabsTrigger>
-                <TabsTrigger value="DOCTOR">Doctores ({dashboardData.totalDoctors})</TabsTrigger>
-                <TabsTrigger value="ADMIN">Admins ({dashboardData.totalAdmins})</TabsTrigger>
+                <TabsTrigger value="all">
+                  Todos ({dashboardData.totalUsers})
+                </TabsTrigger>
+                <TabsTrigger value="PATIENT">
+                  Pacientes ({dashboardData.totalPatients})
+                </TabsTrigger>
+                <TabsTrigger value="DOCTOR">
+                  Doctores ({dashboardData.totalDoctors})
+                </TabsTrigger>
+                <TabsTrigger value="ADMIN">
+                  Admins ({dashboardData.totalAdmins})
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="all">
@@ -612,7 +756,10 @@ export function AdminDashboard() {
               </TabsContent>
 
               <TabsContent value="DOCTOR">
-                <UserTable users={allUsers.filter((u) => u.role === "DOCTOR")} onDelete={handleDeleteUser} />
+                <UserTable
+                  users={allUsers.filter((u) => u.role === "DOCTOR")}
+                  onDelete={handleDeleteUser}
+                />
               </TabsContent>
 
               <TabsContent value="ADMIN">
@@ -628,11 +775,16 @@ export function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Todas las Citas</CardTitle>
-                <CardDescription>Visión general de las citas en el sistema</CardDescription>
+                <CardDescription>
+                  Visión general de las citas en el sistema
+                </CardDescription>
               </div>
               <div className="flex items-center gap-2">
                 <Filter className="h-4 w-4 text-gray-500" />
-                <Select value={selectedDoctorFilter} onValueChange={setSelectedDoctorFilter}>
+                <Select
+                  value={selectedDoctorFilter}
+                  onValueChange={setSelectedDoctorFilter}
+                >
                   <SelectTrigger className="w-[250px]">
                     <SelectValue placeholder="Filtrar por doctor" />
                   </SelectTrigger>
@@ -652,7 +804,9 @@ export function AdminDashboard() {
             {filteredAppointments.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No hay citas para el filtro seleccionado</p>
+                <p className="text-gray-600">
+                  No hay citas para el filtro seleccionado
+                </p>
               </div>
             ) : (
               <Table>
@@ -668,7 +822,9 @@ export function AdminDashboard() {
                 <TableBody>
                   {filteredAppointments.map((appointment) => (
                     <TableRow key={appointment.id}>
-                      <TableCell className="font-medium">{appointment.patient}</TableCell>
+                      <TableCell className="font-medium">
+                        {appointment.patient}
+                      </TableCell>
                       <TableCell>{appointment.doctor}</TableCell>
                       <TableCell>
                         {new Date(appointment.date).toLocaleDateString("es-ES")}
